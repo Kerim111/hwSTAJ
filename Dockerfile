@@ -4,27 +4,27 @@ WORKDIR /app
 
 # Kök package.json (workspace vs. kullanıyorsanız) ve alt dizinler için
 COPY package*.json ./
-COPY frontend/package*.json frontend/
-COPY backend/package*.json backend/
+COPY client/package*.json client/
+COPY server/package*.json server/
 RUN npm install
 
-# Frontend’i derle
-COPY frontend/ frontend/
-RUN cd frontend && npm run build
+# client’i derle
+COPY client/ client/
+RUN cd client && npm run build
 
 # -------- 2) Çalıştırma aşaması --------
 FROM node:18-alpine
 WORKDIR /app
 
 # Sadece production bağımlılıklarını yükle
-COPY backend/package*.json backend/
-RUN cd backend && npm install --production
+COPY server/package*.json server/
+RUN cd server && npm install --production
 
-# Backend kodunu ve build edilmiş React’i kopyala
-COPY backend/ backend/
-COPY --from=builder /app/frontend/build backend/build
+# server kodunu ve build edilmiş React’i kopyala
+COPY server/ server/
+COPY --from=builder /app/client/build server/build
 
-WORKDIR /app/backend
+WORKDIR /app/server
 ENV NODE_ENV=production
 ENV PORT=${PORT:-3000}
 EXPOSE ${PORT}
