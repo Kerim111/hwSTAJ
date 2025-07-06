@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    container_name: testapi-db
+    restart: always
+    environment:
+      POSTGRES_USER: testapi_user
+      POSTGRES_PASSWORD: StrongPassword!
+      POSTGRES_DB: testapi_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  server:
+    build: ./server
+    container_name: testapi-server
+    restart: on-failure
+    env_file:
+      - ./server/.env
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
+
+volumes:
+  db_data:
