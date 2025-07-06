@@ -6,10 +6,10 @@ import compareDates from './compartedates';
 function CheckAndUpdate(date, setDate, setData, setLastDBping) {
   if (date == null) {
     // First time: load tree, then status
-    axios.get(`${baseURL}/update`)
+    axios.get(`https://hwstaj.onrender.com/update`)
       .then(res => {
         setData(res.data);
-        return axios.get(`${baseURL}/LastUpdate`);
+        return axios.get(`https://hwstaj.onrender.com/LastUpdate`);
       })
       .then(res => {
         // res.data is now { lastUpdate, LastDBping }
@@ -20,13 +20,13 @@ function CheckAndUpdate(date, setDate, setData, setLastDBping) {
       .catch(err => console.error(err));
   } else {
     // Subsequent polls: only refetch when the DB timestamp changes
-    axios.get(`${baseURL}/LastUpdate`)
+    axios.get(`https://hwstaj.onrender.com/LastUpdate`)
       .then(res => {
         const { lastUpdate, LastDBping } = res.data;
         if (compareDates(date, lastUpdate) < 0) {
           setDate(new Date(lastUpdate).toLocaleString());
           setLastDBping(new Date(LastDBping).toLocaleString());
-          return axios.get(`${baseURL}/update`)
+          return axios.get(`https://hwstaj.onrender.com/update`)
             .then(r => setData(r.data));
         }
       })
