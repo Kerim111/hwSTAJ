@@ -37,6 +37,15 @@ app.get('*', (req, res) => {
 });
 
 const port = process.env.PORT || 5000;
+
+console.log("= About to register these routes:");
+app._router.stack
+  .filter(r => r.route)
+  .forEach(r => {
+    const methods = Object.keys(r.route.methods).join(",");
+    console.log(`${methods.toUpperCase()}  ${r.route.path}`);
+  });
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
