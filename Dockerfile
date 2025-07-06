@@ -1,6 +1,6 @@
-# -------- 1) Client’ı derle --------
+# 1) Client’ı derle
 FROM node:18-alpine AS builder-client
-WORKDIR /hwSTAJ/client
+WORKDIR /app/client
 
 COPY client/package*.json ./
 RUN npm ci
@@ -8,25 +8,30 @@ RUN npm ci
 COPY client/ ./
 RUN npm run build
 
-# -------- 2) Server prod bağımlılıkları --------
+# 2) Server için prod bağımlılıkları + kod
 FROM node:18-alpine AS builder-server
-WORKDIR /hwSTAJ/server
+WORKDIR /app/server
 
+# 2.1) Sadece package.json’larla bağımlılıkları yükle
 COPY server/package*.json ./
 RUN npm ci --omit=dev
 
-# -------- 3) Çalıştırma imajı --------
+# 2.2) Ardından tüm server dosyalarını kopyala
+COPY server/ ./
+
+# 3) Çalıştırma imajı
 FROM node:18-alpine
-WORKDIR /hwSTAJ/server
+WORKDIR /app/server
 
-# Builder’dan salt server kodunu al
-COPY --from=builder-server /hwSTAJ/server . 
+# 3.1) builder-server’dan tüm server klasörünü getir
+COPY --from=builder-server /app/server . 
 
-# Builder’dan build edilmiş React dosyalarını server içine kopyala
-COPY --from=builder-client /hwSTAJ/client/build ./build
+# 3.2) builder-client’dan derlenmiş React build’ini server içine kopyala
+COPY --from=builder-client /app/client/build ./build
 
 ENV NODE_ENV=production
 ENV PORT=${PORT:-3000}
 EXPOSE ${PORT}
 
+# 3.3) Prod’da nodemon yerine doğrudan node kullanın
 CMD ["node", "server.js"]
