@@ -12,6 +12,7 @@ yarn-error.log*
 
 # Çevresel dosyalar
 .env
+server/.env
 .env.*
 
 # Dockerfile’ların kendisi (opsiyonel)

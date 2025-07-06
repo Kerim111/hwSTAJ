@@ -1,6 +1,8 @@
 // server/db.js
 const { Pool } = require('pg');
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 // PostgreSQL bağlantı havuzu
 const pool = new Pool({
