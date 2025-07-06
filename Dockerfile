@@ -1,33 +1,38 @@
-# -------- 1) Build aşaması --------
-FROM node:18-alpine AS builder
-WORKDIR /app
+# -------- 1) Client’ı derle --------
+FROM node:18-alpine AS builder-client
+WORKDIR /app/client
 
-# Kök package.json (workspace vs. kullanıyorsanız) ve alt dizinler için
-COPY package*.json ./
-COPY client/package*.json client/
-COPY server/package*.json server/
-RUN npm install
+# 1.1) Client bağımlılıklarını yükle
+COPY client/package*.json ./
+RUN npm ci
 
-# client’i derle
-COPY client/ client/
-RUN cd client && npm run build
+# 1.2) Client kodunu kopyala ve build et
+COPY client/ ./
+RUN npm run build
 
-# -------- 2) Çalıştırma aşaması --------
+# -------- 2) Server için prod bağımlılıkları --------
+FROM node:18-alpine AS builder-server
+WORKDIR /app/server
+
+# 2.1) Server bağımlılıklarını yükle (sadece prod)
+COPY server/package*.json ./
+RUN npm ci --omit=dev
+
+# -------- 3) Çalıştırma imajı --------
 FROM node:18-alpine
 WORKDIR /app
 
-# Sadece production bağımlılıklarını yükle
-COPY server/package*.json server/
-RUN cd server && npm install --production
+# 3.1) Server kodunu kopyala
+COPY --from=builder-server /app/server ./server
 
-# server kodunu ve build edilmiş React’i kopyala
-COPY server/ server/
-COPY --from=builder /app/client/build server/build
+# 3.2) Build edilmiş client’ı server içine al
+COPY --from=builder-client /app/client/build ./server/build
 
 WORKDIR /app/server
 ENV NODE_ENV=production
+# Render veya local fallback olarak
 ENV PORT=${PORT:-3000}
 EXPOSE ${PORT}
 
-# Uygulamayı başlat
+# Sunucuyu başlat
 CMD ["npm", "run", "start"]

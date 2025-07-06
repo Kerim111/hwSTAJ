@@ -1,9 +1,19 @@
+# Node modüller ve log dosyaları
 node_modules
 client/node_modules
 server/node_modules
 npm-debug.log*
-Dockerfile*
-.dockerignore
+yarn-debug.log*
+yarn-error.log*
+
+# Git
 .git
 .gitignore
+
+# Çevresel dosyalar
 .env
+.env.*
+
+# Dockerfile’ların kendisi (opsiyonel)
+Dockerfile*
+.dockerignore
