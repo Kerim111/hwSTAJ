@@ -19,20 +19,22 @@ COPY server/package*.json ./
 RUN npm ci --omit=dev
 
 # -------- 3) Çalıştırma imajı --------
+# -------- 3) Çalıştırma imajı --------
 FROM node:18-alpine
-WORKDIR /hwSTAJ
 
-# 3.1) Server kodunu kopyala
-COPY --from=builder-server /hwSTAJ/server ./server
+# 1) Çalışma dizinini doğrudan server klasörüne ayarla
+WORKDIR /hwSTAJ/server    # veya /app/server
 
-# 3.2) Build edilmiş client’ı server içine al
-COPY --from=builder-client /hwSTAJ/client/build ./server/build
+# 2) Builder’dan server kodunu getir
+COPY --from=builder-server /hwSTAJ/server .   # veya /app/server .
 
-WORKDIR /hwSTAJ/server
+# 3) Builder’dan React build dosyalarını server altına kopyala
+COPY --from=builder-client /hwSTAJ/client/build ./build
+
+# 4) Üretim ortamı ayarları
 ENV NODE_ENV=production
-# Render veya local fallback olarak
 ENV PORT=${PORT:-3000}
 EXPOSE ${PORT}
 
-# Sunucuyu başlat
-CMD ["npm", "run", "start"]
+# 5) Doğrudan node ile çalıştır
+CMD ["node", "server.js"]
