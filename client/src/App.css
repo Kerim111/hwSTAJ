@@ -1,0 +1,14 @@
+/* App.css */
+
+/* Space the columns */
+  
+  /* Light background for odd rows */
+  tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  
+  /* Darker background for even rows */
+  tbody tr:nth-child(even) {
+    background-color: #ff8f8f;
+  }
+  
