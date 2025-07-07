@@ -32,20 +32,16 @@ const lastUpdate = require('./routes/LastUpdate');
 app.use("/LastUpdate", lastUpdate);
 
 // 3) All other GETs should send back React’s index.html
-app.get('/:path*', (req, res) => {
+// serve React on any path not handled above
+// after express.static & your API mounts:
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 
-const port = process.env.PORT || 5000;
 
-console.log("= About to register these routes:");
-app._router.stack
-  .filter(r => r.route)
-  .forEach(r => {
-    const methods = Object.keys(r.route.methods).join(",");
-    console.log(`${methods.toUpperCase()}  ${r.route.path}`);
-  });
+
+const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
