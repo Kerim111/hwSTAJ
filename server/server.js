@@ -32,9 +32,10 @@ const lastUpdate = require('./routes/LastUpdate');
 app.use("/LastUpdate", lastUpdate);
 
 // 3) All other GETs should send back React’s index.html
-app.get('*', (req, res) => {
+app.get('/:path*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
+
 
 const port = process.env.PORT || 5000;
 
