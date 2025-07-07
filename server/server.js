@@ -11,9 +11,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 1) Serve React’s build output
-//    (assumes you copied client/build → server/build in your Dockerfile)
+
+
 app.use(express.static(path.join(__dirname, 'build')));
+
 
 initDB().catch(console.error);
 
@@ -25,15 +26,13 @@ async function updateData() {
 updateData();
 setInterval(updateData, 3*60*1000);
 
-// 2) Mount your API routes
+
 const update = require('./routes/update');
 app.use("/update", update);
 const lastUpdate = require('./routes/LastUpdate');
 app.use("/LastUpdate", lastUpdate);
 
-// 3) All other GETs should send back React’s index.html
-// serve React on any path not handled above
-// after express.static & your API mounts:
+
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });

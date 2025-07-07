@@ -52,7 +52,7 @@ async function getData() {
         return raw.map(r => ({
             hesap_kodu: r.hesap_kodu,
             ust_hesap_id: r.ust_hesap_id || null,
-            tipi: r.tipi || 'B', // Default to 'B' if not specified
+            tipi: r.tipi || 'B',
             borc: r.borc || 0,
             alacak: r.alacak || 0
           }));
