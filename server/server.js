@@ -16,8 +16,6 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
 
-initDB().catch(console.error);
-
 async function updateData() {
   const records = await getData.getData();
   await upsertData(records);
