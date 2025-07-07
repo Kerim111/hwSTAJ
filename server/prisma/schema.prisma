@@ -9,7 +9,7 @@ generator client {
 
 model AccountData {
   hesap_kodu   String   @id
-  ust_hesap_id String?
+  ust_hesap_id Float?
   tipi         String   @db.Char(1)
   borc         Float    @default(0)
   alacak       Float    @default(0)
