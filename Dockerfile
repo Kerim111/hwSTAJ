@@ -33,8 +33,7 @@ ENV NODE_ENV=production
 ENV PORT=${PORT:-3000}
 EXPOSE ${PORT}
 
-RUN npx prisma generate  
-RUN npx prisma migrate deploy  
+
 
 # 3.3) Prod’da nodemon yerine doğrudan node kullanın
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && node server.js"]
