@@ -27,8 +27,7 @@ function App() {
   return (
     <div className="App" style={{ padding: 16 }}>
       <h1>Hesap Ağacı</h1>
-      <p>Son Güncelleme (DB Değişiklik): {lastUpdate}</p>
-      <p>Son API Ping: {lastDBping}</p>
+      <p>Son Güncelleme {lastUpdate}</p>
       <Tree data={treeData} />
     </div>
   );
