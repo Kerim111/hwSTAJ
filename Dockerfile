@@ -35,5 +35,5 @@ EXPOSE ${PORT}
 
 
 
-# 3.3) Prod’da nodemon yerine doğrudan node kullanın
-CMD ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && node server.js"]
+
+CMD ["sh", "-c", "npx prisma generate && npx prisma db push --accept-data-loss && node server.js"]
